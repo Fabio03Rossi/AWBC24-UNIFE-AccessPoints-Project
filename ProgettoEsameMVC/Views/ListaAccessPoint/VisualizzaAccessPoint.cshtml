@@ -1,0 +1,53 @@
+﻿@using ModelliAccessPoint
+@using ProgettoEsameMVC.Models.ViewModels
+@{
+    Layout = null;
+}
+@model ListaAccessPointVisualizzaAccessPointViewModel
+
+<h1>Elenco AccessPoint UNIFE</h1>
+
+<table>
+    <tr>
+        <th>
+            ID
+        </th>
+        <th>
+            Edificio
+        </th>
+        <th>
+            Marca
+        </th>
+        <th>
+            Modello
+        </th>
+    </tr>
+    @if(Model.ElencoAccessPoint.Count() > 0)
+    {
+        @foreach(AccessPoint AP in Model.ElencoAccessPoint)
+        {
+            <tr>
+                <th>
+                    @AP.ID
+                </th>
+                <th>
+                    @AP.Edificio
+                </th>
+                <th>
+                    @AP.Marca
+                </th>
+                <th>
+                    @AP.Modello
+                </th>
+            </tr>
+        }
+    }
+    else
+    {
+        <tr>
+            <th>
+            Non è presente alcun AccessPoint.
+            </th>
+        </tr>
+    }
+</table>
