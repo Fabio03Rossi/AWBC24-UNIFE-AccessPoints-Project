@@ -1,0 +1,23 @@
+<div class="position-absolute top-50 start-50 translate-middle w-100">
+  <div class="container-sm h-100 d-flex align-items-center justify-content-center">
+        <form class="p-4 border border-2 shadow bg-body w-50" style="border-radius: 25px">
+          <div class="mb-3 d-flex justify-content-center">
+            <h2>Login</h2>
+          </div>
+          <div class="mb-3">
+            <label for="userIdInput" class="form-label">ID Utente</label>
+            <input type="userId" class="form-control" id="userIdInput" required
+                   [(ngModel)]="userId" [ngModelOptions]="{standalone: true}">
+            <div id="userIdHelp" class="form-text">Non condividerlo con nessuno.</div>
+          </div>
+          <div class="mb-3">
+            <label for="passwordInput" class="form-label">Password</label>
+            <input type="password" class="form-control" id="passwordInput" required
+                   [(ngModel)]="password" [ngModelOptions]="{standalone: true}">
+          </div>
+          <div class="p-2 m-2 d-flex justify-content-center">
+            <input type="submit" class="btn btn-primary" value="Accedi" (click)="generaJWT()">
+          </div>
+        </form>
+  </div>
+</div>
