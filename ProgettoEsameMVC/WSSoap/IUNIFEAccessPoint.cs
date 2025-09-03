@@ -23,7 +23,6 @@ namespace ProgettoEsameMVC.WSSoap
     {
         public AccessPoint[] RitornaTuttiGliAccessPoint()
         {
-            
             return FunzioniAccessPoint.DaiAccessPoint().Result;
         }
 

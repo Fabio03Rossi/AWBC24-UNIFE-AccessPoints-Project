@@ -1,24 +1,33 @@
+
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using ProgettoEsameMVC.WSSoap;
-using SoapCore;
 using System.Text;
 
-namespace ProgettoEsameMVC
+namespace RestTestApplication
 {
     public class Program
     {
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+            var config = builder.Configuration;
 
             // Add services to the container.
-            builder.Services.AddControllersWithViews();
-            builder.Services.AddRazorPages();
 
-            builder.Services.AddSoapCore();
-            builder.Services.AddScoped<IUNIFEAccessPoint, ServizioUNIFEAccessPoint>();
+            builder.Services.AddControllers();
+            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+            builder.Services.AddEndpointsApiExplorer();
+            builder.Services.AddSwaggerGen();
+
+            builder.Services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(policy =>
+                                  {
+                                      policy.WithOrigins("http://localhost:4200")
+                                      .AllowAnyHeader()
+                                      .AllowAnyMethod();
+                                  });
+            });
 
             builder.Services.AddAuthentication(cfg => {
                 cfg.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -26,13 +35,13 @@ namespace ProgettoEsameMVC
                 cfg.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
             }).AddJwtBearer(x => {
                 x.RequireHttpsMetadata = false;
-                x.SaveToken = false;
+                x.SaveToken = true;
                 x.TokenValidationParameters = new TokenValidationParameters()
                 {
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey = new SymmetricSecurityKey(
                         Encoding.UTF8
-                        .GetBytes(builder.Configuration.GetValue<string>("ApplicationSettings:JWT_Secret"))
+                        .GetBytes(config.GetValue<string>("ApplicationSettings:JWT_Secret"))
                     ),
                     ValidateIssuer = false,
                     ValidateAudience = false,
@@ -43,28 +52,19 @@ namespace ProgettoEsameMVC
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
-            if (!app.Environment.IsDevelopment())
+            if (app.Environment.IsDevelopment())
             {
-                app.UseExceptionHandler("/Home/Error");
+                app.UseSwagger();
+                app.UseSwaggerUI();
             }
-            app.UseStaticFiles();
 
-            app.UseRouting();
+            app.UseCors();
 
             app.UseAuthentication();
 
             app.UseAuthorization();
 
-            app.MapControllerRoute(
-                name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}");
-
-            app.MapRazorPages();
-
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.UseSoapEndpoint<IUNIFEAccessPoint>(path: "/ServizioUNIFEAccessPoint.wsdl", new SoapEncoderOptions(), SoapSerializer.XmlSerializer);
-            });
+            app.MapControllers();
 
             app.Run();
         }
