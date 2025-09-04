@@ -35,7 +35,8 @@ import {
 })
 export class Login implements OnInit {
   loginService = inject(Accesso);
-  isPressed = signal(false);
+  isWrong = signal(false);
+  isLoading = signal(false);
 
   userId = signal("");
   password = signal("");
@@ -43,10 +44,13 @@ export class Login implements OnInit {
   constructor(private router: Router) {}
 
   generaJWT() {
+    this.isLoading.set(true);
+    this.isWrong.set(false);
     this.loginService.getJWT(this.userId(), this.password())
       .pipe(
         catchError((err: HttpErrorResponse) => {
-          this.isPressed.set(true);
+          this.isWrong.set(true);
+          this.isLoading.set(false);
 
           const error = err.error?.message || err.statusText;
           console.error(err);
@@ -55,6 +59,7 @@ export class Login implements OnInit {
       )
       .subscribe((res) => {
       if(res) {
+        this.isLoading.set(false);
         localStorage.setItem('access_token', res.token);
         this.router.navigate(['accesspoint']);
       }

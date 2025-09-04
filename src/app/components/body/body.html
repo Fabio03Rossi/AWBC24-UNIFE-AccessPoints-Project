@@ -2,8 +2,10 @@
   <div class="container-sm pb-5 d-flex justify-content-center">
     <form class="p-4 w-75 border border-2 shadow bg-body" style="border-radius: 25px">
       <div class="input-group">
-        <span class="form-select" id="inputGroupSelect01">Edificio</span>
-        <input type="text" class="form-control" [(ngModel)]="valoreRicerca" [ngModelOptions]="{standalone: true}">
+        <div class="input-group-prepend">
+          <span class="input-group-text" id="basic-addon3">Edificio</span>
+        </div>
+        <input id="nomeEdificio" type="text" class="form-control" [(ngModel)]="valoreRicerca" [ngModelOptions]="{standalone: true}">
         <button class="btn btn-outline-secondary" type="button" (click)="aggiornaListaAP()">Cerca</button>
       </div>
     </form>
