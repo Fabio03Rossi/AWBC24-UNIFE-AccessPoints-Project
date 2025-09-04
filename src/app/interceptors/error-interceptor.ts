@@ -15,12 +15,13 @@ import {
 
 export const errorInterceptor: HttpInterceptorFn = (req, next) => {
   const router: Router = inject(Router);
+
   return next(req)
     .pipe(
       catchError((err: HttpErrorResponse) => {
         if ([401, 403].includes(err.status)) {
           localStorage.removeItem('access_token');
-          router.navigateByUrl('/login');
+          router.navigateByUrl('/');
         }
 
         const error = err.error?.message || err.statusText;

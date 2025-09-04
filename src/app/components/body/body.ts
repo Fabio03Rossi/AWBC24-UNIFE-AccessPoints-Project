@@ -11,6 +11,7 @@ import {
   AccessPoint
 } from '../../model/accesspoint.type';
 import {
+  BehaviorSubject,
   catchError
 } from 'rxjs';
 import {
@@ -54,16 +55,7 @@ export class Body implements OnInit {
   }
 
   ngOnInit() {
-    if(!localStorage.getItem('access_token')){
-      this.router.navigate(['login']);
-    }
     this.apService.getAPIAccessPoints(this.valoreRicerca)
-      .pipe(
-        catchError(error => {
-          console.log(error);
-          throw error;
-        })
-      )
       .subscribe((aps) => {
         this.apItems.set(aps);
       })

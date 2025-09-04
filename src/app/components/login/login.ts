@@ -12,15 +12,16 @@ import {
   Accesso
 } from '../../services/accesso';
 import {
-  OttieniAccessPoint
-} from '../../services/ottieni-access-point';
-import {
-  AccessPoint
-} from '../../model/accesspoint.type';
-import {
   FormsModule,
   ReactiveFormsModule
 } from '@angular/forms';
+import {
+  catchError,
+  throwError
+} from 'rxjs';
+import {
+  HttpErrorResponse
+} from '@angular/common/http';
 
 @Component({
   selector: 'app-login',
@@ -34,18 +35,30 @@ import {
 })
 export class Login implements OnInit {
   loginService = inject(Accesso);
+  isPressed = signal(false);
+
   userId = signal("");
   password = signal("");
 
   constructor(private router: Router) {}
 
   generaJWT() {
-    this.loginService.getJWT(this.userId(), this.password()).subscribe((res) => {
+    this.loginService.getJWT(this.userId(), this.password())
+      .pipe(
+        catchError((err: HttpErrorResponse) => {
+          this.isPressed.set(true);
+
+          const error = err.error?.message || err.statusText;
+          console.error(err);
+          return throwError(() => error);
+        })
+      )
+      .subscribe((res) => {
       if(res) {
         localStorage.setItem('access_token', res.token);
-        this.router.navigate(['/']);
+        this.router.navigate(['accesspoint']);
       }
-    });
+    })
   }
 
   ngOnInit() {
