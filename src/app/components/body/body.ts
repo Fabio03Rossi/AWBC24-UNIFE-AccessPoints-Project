@@ -39,8 +39,6 @@ export class Body implements OnInit {
   apItems = signal<Array<AccessPoint>>([])
   valoreRicerca: string = "";
 
-  constructor(private router: Router) {}
-
   aggiornaListaAP() {
     this.apService.getAPIAccessPoints(this.valoreRicerca)
       .pipe(
@@ -55,9 +53,6 @@ export class Body implements OnInit {
   }
 
   ngOnInit() {
-    this.apService.getAPIAccessPoints(this.valoreRicerca)
-      .subscribe((aps) => {
-        this.apItems.set(aps);
-      })
+    this.aggiornaListaAP()
   }
 }
