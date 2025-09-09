@@ -2,7 +2,10 @@ import {
   Component,
   signal
 } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import {
+  Router,
+  RouterLink
+} from '@angular/router';
 import { HeaderItem } from './header-item/header-item.component';
 
 @Component({
@@ -13,4 +16,20 @@ import { HeaderItem } from './header-item/header-item.component';
 })
 export class Header {
   login = signal("Login")
+
+  constructor(private router: Router) {
+    this.router.events.subscribe(() => {
+      let token = localStorage.getItem('access_token');
+      if (token) {
+        this.login.set("Logout")
+      } else {
+        this.login.set("Login")
+      }
+    });
+  }
+
+  removeToken(){
+    localStorage.removeItem('access_token');
+    this.router.navigate(['/']);
+  }
 }

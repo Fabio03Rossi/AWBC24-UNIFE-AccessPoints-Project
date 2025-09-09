@@ -14,7 +14,7 @@ export class Accesso {
   http = inject(HttpClient);
 
   getJWT(userId: string, password: string) {
-    const url = "http://localhost:5202/api/Login/Login";
+    const url = "http://localhost:5000/api/Login/Login";
     return this.http.post<JsonResponseType | null>(url, { "id": userId, "password": password });
   }
 }

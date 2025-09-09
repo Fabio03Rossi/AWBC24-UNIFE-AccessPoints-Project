@@ -1,6 +1,7 @@
 import {
   Component,
   inject,
+  OnDestroy,
   OnInit,
   signal
 } from '@angular/core';
@@ -17,6 +18,11 @@ import {
 } from '@angular/forms';
 import {
   catchError,
+  fromEvent,
+  map,
+  merge,
+  of,
+  Subscription,
   throwError
 } from 'rxjs';
 import {
@@ -33,7 +39,9 @@ import {
   styleUrl: './login.css',
   providers: [Accesso]
 })
-export class Login implements OnInit {
+export class Login implements OnInit, OnDestroy {
+  networkStatus: boolean = false;
+  networkStatus$: Subscription = Subscription.EMPTY;
   loginService = inject(Accesso);
   isWrong = signal(false);
   isLoading = signal(false);
@@ -66,7 +74,25 @@ export class Login implements OnInit {
     })
   }
 
+  checkNetworkStatus() {
+    this.networkStatus = navigator.onLine;
+    this.networkStatus$ = merge(
+      of(null),
+      fromEvent(window, 'online'),
+      fromEvent(window, 'offline')
+    )
+      .pipe(map(() => navigator.onLine))
+      .subscribe(status => {
+        console.log('status', status);
+        this.networkStatus = status;
+      });
+  }
+
   ngOnInit() {
     localStorage.removeItem('access_token');
+    this.checkNetworkStatus();
+  }
+  ngOnDestroy(): void {
+    this.networkStatus$.unsubscribe();
   }
 }

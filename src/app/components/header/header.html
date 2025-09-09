@@ -5,7 +5,7 @@
         <span class="navbar-brand" routerLink="accesspoint"><b>UNIFE AccessPoints</b></span>
       </div>
       <ul class="nav navbar-right nav-pills">
-        <app-header-item [text]="login()" routerLink="/"/>
+        <app-header-item [text]="login()" (click)="removeToken()" routerLink="/"/>
       </ul>
     </div>
   </nav>

@@ -49,10 +49,10 @@ export class Body implements OnInit {
       )
       .subscribe((aps) => {
         this.apItems.set(aps);
-      })
+      });
   }
 
   ngOnInit() {
-    this.aggiornaListaAP()
+    this.aggiornaListaAP();
   }
 }

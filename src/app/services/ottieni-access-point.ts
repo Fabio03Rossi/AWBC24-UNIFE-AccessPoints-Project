@@ -21,8 +21,8 @@ export class OttieniAccessPoint {
   http = inject(HttpClient);
 
   getAPIAccessPoints(input: string) {
-    const url = input == "" ? "http://localhost:5202/api/AccessPoint/OttieniAccessPoint"
-      : "http://localhost:5202/api/AccessPoint/RicercaEdificio?Edificio=" + input;
+    const url = input == "" ? "http://localhost:5000/api/AccessPoint/OttieniAccessPoint"
+      : "http://localhost:5000/api/AccessPoint/RicercaEdificio?Edificio=" + input;
 
     return this.http.get<Array<AccessPoint>>(url);
   }
