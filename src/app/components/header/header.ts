@@ -17,6 +17,7 @@ import { HeaderItem } from './header-item/header-item.component';
 export class Header {
   login = signal("Login")
 
+  // A seconda della presenza del token cambiamo il testo del pulsante nell'Header
   constructor(private router: Router) {
     this.router.events.subscribe(() => {
       let token = localStorage.getItem('access_token');
@@ -28,6 +29,7 @@ export class Header {
     });
   }
 
+  // Quando si preme il tasto di Login/Logout rimuoviamo il token e rimandiamo alla pagina di accesso
   removeToken(){
     localStorage.removeItem('access_token');
     this.router.navigate(['/']);

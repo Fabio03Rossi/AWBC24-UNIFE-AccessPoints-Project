@@ -1,15 +1,11 @@
 import {
-  HttpErrorResponse,
   HttpInterceptorFn
 } from '@angular/common/http';
-import {
-  catchError,
-  throwError
-} from 'rxjs';
 
 export const jwtInterceptor: HttpInterceptorFn = (request, next) => {
   let token = localStorage.getItem('access_token');
 
+  // In questo caso se il token è presente lo aggiungiamo all'header di tutte le richieste Http
   if (token) {
     const authRequest = request.clone({
       setHeaders: {

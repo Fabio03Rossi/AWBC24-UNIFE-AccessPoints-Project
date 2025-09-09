@@ -43,6 +43,8 @@ export class Login implements OnInit, OnDestroy {
   networkStatus: boolean = false;
   networkStatus$: Subscription = Subscription.EMPTY;
   loginService = inject(Accesso);
+
+  // Segnali per il controllo degli elementi Form
   isWrong = signal(false);
   isLoading = signal(false);
 
@@ -51,12 +53,17 @@ export class Login implements OnInit, OnDestroy {
 
   constructor(private router: Router) {}
 
+
   generaJWT() {
+    // Mostriamo il caricamento e rimuoviamo messaggi di errore
     this.isLoading.set(true);
     this.isWrong.set(false);
+
+    // Richiamiamo il servizio per ottenere il JWT con i dati dell'utente
     this.loginService.getJWT(this.userId(), this.password())
       .pipe(
         catchError((err: HttpErrorResponse) => {
+          // Semplicemente supponiamo che i dati siano incorretti
           this.isWrong.set(true);
           this.isLoading.set(false);
 
@@ -67,6 +74,7 @@ export class Login implements OnInit, OnDestroy {
       )
       .subscribe((res) => {
       if(res) {
+        // Essendo i dati corretti si va al body
         this.isLoading.set(false);
         localStorage.setItem('access_token', res.token);
         this.router.navigate(['accesspoint']);
@@ -74,7 +82,8 @@ export class Login implements OnInit, OnDestroy {
     })
   }
 
-  checkNetworkStatus() {
+  // Per controllare se si è online
+  checkStatoNetwork() {
     this.networkStatus = navigator.onLine;
     this.networkStatus$ = merge(
       of(null),
@@ -90,7 +99,7 @@ export class Login implements OnInit, OnDestroy {
 
   ngOnInit() {
     localStorage.removeItem('access_token');
-    this.checkNetworkStatus();
+    this.checkStatoNetwork();
   }
   ngOnDestroy(): void {
     this.networkStatus$.unsubscribe();

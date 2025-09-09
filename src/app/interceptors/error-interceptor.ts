@@ -16,6 +16,7 @@ import {
 export const errorInterceptor: HttpInterceptorFn = (req, next) => {
   const router: Router = inject(Router);
 
+  // Intercettiamo qualsiasi errore di autorizzazione e rimuoviamo il token per sicurezza, rimandando al Login
   return next(req)
     .pipe(
       catchError((err: HttpErrorResponse) => {
